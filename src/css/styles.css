@@ -1,0 +1,18 @@
+body {
+  padding: 30px
+}
+
+.about-breed {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px
+}
+
+.img {
+  display: block;
+}
+
+.span {
+  font-weight: bold
+}
