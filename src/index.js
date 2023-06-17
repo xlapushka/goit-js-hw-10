@@ -1,12 +1,13 @@
-import {fetchBreeds, fetchCatByBreed, fetchCatInfo } from './js/cat-api'
+import {fetchBreeds, fetchCatByBreed, fetchCatInfo } from './js/cat-api';
+import SlimSelect from 'slim-select';
+import Notiflix from 'notiflix';
 
 const refs = {
-  loader : document.querySelector(".loader"),
+  loader : document.querySelector(".loaderr"),
   breedSelect : document.querySelector(".breed-select"),
   catInfo : document.querySelector(".cat-info"),
   error : document.querySelector(".error"),
 }
-
 let currentBreed = '';
 
 refs.breedSelect.addEventListener("change", chosenBreed);
@@ -83,9 +84,32 @@ function throwError(err) {
   refs.breedSelect.classList.add('hidden');
   refs.catInfo.classList.add('hidden');
 
-  refs.error.classList.remove('hidden');
+  Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
   console.log(err);
 } 
+
+
+// ======================libraries========================
+
+new SlimSelect({
+  select: '#single'
+})
+
+Notiflix.Notify.init({
+  width: '480px',
+  position: 'left-top',
+  distance: '120px',
+  opacity: 1,
+  borderRadius: '5px',
+  rtl: false,
+  timeout: 5000,
+  backOverlay: false,
+  backOverlayColor: 'rgba(0,0,0,0.5)',
+  plainText: true,
+  showOnlyTheLastOne: false,
+  clickToClose: false,
+  pauseOnHover: true,
+});
 
 
 
