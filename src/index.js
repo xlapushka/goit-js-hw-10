@@ -9,27 +9,34 @@ const refs = {
 
 let currentBreed = '';
 
-// document.addEventListener("DOMContentLoaded", fetchBreeds());
 refs.breedSelect.addEventListener("change", chosenBreed);
 
 
 
-// =====================errors=======================
-// function loaderIsOn(evt) {
-//   evt.preventDefault();
-//   breedSelect.hidden;
-//   error.hidden;
-//   catInfo.hidden
+// =======================loader-1====================
+
+// document.addEventListener("DOMContentLoaded", showBreedSelect);
+// function showBreedSelect() {
+//   refs.loader.classList.add('hidden');
+//   refs.breedSelect.classList.remove('hidden');
 // }
+
+// function showCatInfo() {
+//   refs.loader.classList.add('hidden');
+//   catInfo.breedSelect.classList.remove('hidden');
+// }  
 
 
 // =====================select=======================
 
 (() => {
-  fetchBreeds().then(data => refs.breedSelect.innerHTML = createMarkUpSelect(data)).catch(err => console.log(err))
+  fetchBreeds().then(data => refs.breedSelect.innerHTML = createMarkUpSelect(data)).catch(err => console.log(err));
 })();
 
 function createMarkUpSelect(arr) {  
+  refs.loader.classList.add('hidden');
+  refs.breedSelect.classList.remove('hidden');
+
   return arr.map(el => `
   <option value = "${el.id}">${el.name}</option> `).join('')
 }
@@ -39,19 +46,23 @@ function createMarkUpSelect(arr) {
 
 function chosenBreed(evt) {
   evt.preventDefault();
+  refs.loader.classList.remove('hidden');
   currentBreed = evt.target.value;
+
   fetchCatByBreed(currentBreed).then(data => refs.catInfo.innerHTML = createMarkUpBreedImg(data)).catch(err => console.log(err));
 };
 
 function createMarkUpBreedImg(data) {
   let id = data[0].id;  
   fetchCatInfo(id).then(data => refs.catInfo.insertAdjacentHTML('beforeend', createMarkUpBreedInfo(data))).catch(err => console.log(err));
-
-  return `<img src="${data[0].url}" class="cat's img" alt="cat" width="300px">
+  return `<div><img src="${data[0].url}" class="cat-img" alt="cat" width="300px" height=auto></div>
 `};
 
 function createMarkUpBreedInfo(data) {
   let breed = data.breeds[0];
+  refs.loader.classList.add('hidden');
+  refs.catInfo.classList.remove('hidden');
+
   return ` <div>
             <h1 class="cat's breed">${breed.name}</h1> 
             <p class="breed's description">${breed.description}</p>
@@ -64,42 +75,6 @@ function createMarkUpBreedInfo(data) {
 
 
 
-
-
-
-
-// function createMarkUpBreedInfo(data) {
-
-//   let id = data[0].id;
-//   console.log(getInfo(id));
-//   let {catsBreed,
-//       breedsDescription,
-//       temperamentDescription} = getInfo(id);
-
-
-//   // fetchCatInfo(id).then(data => console.log(data)).catch(err => console.log(err));
-  
-//   return `<img src="${data[0].url}" class="cat's img" alt="cat" width="300px">
-// `};
-  
-
-// function getInfo(id) {
-
-//   fetchCatInfo(id).then(data => {console.log(data.breeds[0].name)
-//     // let catsBreed = http.name;
-//     // let breedsDescription = http.description;
-//     // let temperamentDescription = http.temperament;
-//   }).catch(err => console.log(err));
-
-  
-//   // console.log(data.breeds[0].name, data.breeds[0].description, data.breeds[0].temperament)
-//   // data.breeds[0].name
-//   return {
-//     catsBreed : data.breeds[0].name,
-//     breedsDescription : data.breeds[0].description,
-//     temperamentDescription : data.breeds[0].temperament
-//   } 
-// }
 
 
 

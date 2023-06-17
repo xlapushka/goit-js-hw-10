@@ -13,10 +13,14 @@ select {
   gap: 10px
 }
 
-img {
+.cat-img {
   display: block;
 }
 
 .span {
-  font-weight: bold
+  font-weight: bold;
+}
+
+.hidden {
+  display: none
 }
