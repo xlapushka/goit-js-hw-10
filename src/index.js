@@ -30,7 +30,7 @@ refs.breedSelect.addEventListener("change", chosenBreed);
 // =====================select=======================
 
 (() => {
-  fetchBreeds().then(data => refs.breedSelect.innerHTML = createMarkUpSelect(data)).catch(err => console.log(err));
+  fetchBreeds().then(data => refs.breedSelect.innerHTML = createMarkUpSelect(data)).catch(err => throwError(err));
 })();
 
 function createMarkUpSelect(arr) {  
@@ -47,14 +47,16 @@ function createMarkUpSelect(arr) {
 function chosenBreed(evt) {
   evt.preventDefault();
   refs.loader.classList.remove('hidden');
+  refs.catInfo.innerHTML = '';
   currentBreed = evt.target.value;
 
-  fetchCatByBreed(currentBreed).then(data => refs.catInfo.innerHTML = createMarkUpBreedImg(data)).catch(err => console.log(err));
+  fetchCatByBreed(currentBreed).then(data => refs.catInfo.innerHTML = createMarkUpBreedImg(data)).catch(err => throwError(err));
 };
 
 function createMarkUpBreedImg(data) {
   let id = data[0].id;  
-  fetchCatInfo(id).then(data => refs.catInfo.insertAdjacentHTML('beforeend', createMarkUpBreedInfo(data))).catch(err => console.log(err));
+  
+  fetchCatInfo(id).then(data => refs.catInfo.insertAdjacentHTML('beforeend', createMarkUpBreedInfo(data))).catch(err => throwError(err));
   return `<div><img src="${data[0].url}" class="cat-img" alt="cat" width="300px" height=auto></div>
 `};
 
@@ -72,6 +74,18 @@ function createMarkUpBreedInfo(data) {
             </p>
           </div> `
 };
+
+
+// ======================error========================
+
+function throwError(err) {
+  refs.loader.classList.add('hidden');
+  refs.breedSelect.classList.add('hidden');
+  refs.catInfo.classList.add('hidden');
+
+  refs.error.classList.remove('hidden');
+  console.log(err);
+} 
 
 
 
