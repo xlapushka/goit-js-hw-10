@@ -2,6 +2,7 @@ import {fetchBreeds, fetchCatByBreed, fetchCatInfo } from './js/cat-api';
 import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 
+const BASE_INFO_URL = 'https://api.thecatapi.com/v1/images';
 const refs = {
   loader : document.querySelector(".loaderr"),
   breedSelect : document.querySelector(".breed-select"),
@@ -31,6 +32,7 @@ refs.breedSelect.addEventListener("change", chosenBreed);
 // =====================select=======================
 
 (() => {
+  refs.loader.classList.remove('hidden');
   fetchBreeds().then(data => refs.breedSelect.innerHTML = createMarkUpSelect(data)).catch(err => throwError(err));
 })();
 
@@ -54,9 +56,20 @@ function chosenBreed(evt) {
   fetchCatByBreed(currentBreed).then(data => refs.catInfo.innerHTML = createMarkUpBreedImg(data)).catch(err => throwError(err));
 };
 
+
 function createMarkUpBreedImg(data) {
   let id = data[0].id;  
   
+  function fetchCatInfo(id) {
+    return fetch(`${BASE_INFO_URL}/${id}`).then(resp => 
+      { 
+        if (!resp.ok) {
+          throw new Error("resp.statusText");
+        };
+      return resp.json()
+      })
+  };
+
   fetchCatInfo(id).then(data => refs.catInfo.insertAdjacentHTML('beforeend', createMarkUpBreedInfo(data))).catch(err => throwError(err));
   return `<div><img src="${data[0].url}" class="cat-img" alt="cat" width="300px" height=auto></div>
 `};
@@ -81,11 +94,11 @@ function createMarkUpBreedInfo(data) {
 
 function throwError(err) {
   refs.loader.classList.add('hidden');
-  refs.breedSelect.classList.add('hidden');
-  refs.catInfo.classList.add('hidden');
+  // refs.breedSelect.classList.add('hidden');
+  // refs.catInfo.classList.add('hidden');
 
   Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
-  console.log(err);
+  // console.log(err);
 } 
 
 
